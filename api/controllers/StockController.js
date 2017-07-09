@@ -16,7 +16,10 @@ module.exports = {
 				'ticker'
 			]
 		}).then(function() {
-
+			return StockService.addStock(req.body.name, req.body.ticker)
+			.then(function(response) {
+				return res.json(response);
+			});
 		}).catch(function(err) {
 			return HelperService.handleError(err, res);
 		});

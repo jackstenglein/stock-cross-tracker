@@ -15,7 +15,8 @@ module.exports = {
 
     ticker: {
       type: 'string',
-      required: true
+      required: true,
+      unique: true
     },
 
     purchases: {
