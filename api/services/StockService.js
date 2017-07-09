@@ -33,6 +33,21 @@ module.exports = {
   },
 
 
+  getPurchases: function(ticker) {
+    return Stock.findOne({ticker: ticker})
+    .populate('purchases')
+    .then(function(stock, err) {
+      if(err) throw err;
+      if(!stock) throw new Err('Ticker not found', 400);
+
+      return {
+        'message': 'Found purchases',
+        'purchases': stock.purchases
+      };
+    });
+  },
+
+
   removeStock: function(ticker) {
     return Stock.destroy({
       ticker: ticker

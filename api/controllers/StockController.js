@@ -21,6 +21,10 @@ module.exports = {
 				return res.json(response);
 			});
 		}).catch(function(err) {
+			if(err.invalidAttributes && err.invalidAttributes.ticker) {
+				err.code = 400;
+				err.message = 'Ticker already exists';
+			}
 			return HelperService.handleError(err, res);
 		});
 	},
@@ -33,6 +37,22 @@ module.exports = {
 			]
 		}).then(function() {
 			return StockService.getAllTransactions(req.query.ticker.toUpperCase())
+			.then(function(response) {
+				return res.json(response);
+			});
+		}).catch(function(err) {
+			return HelperService.handleError(err, res);
+		});
+	},
+
+
+	getPurchases: function(req, res) {
+		CheckParams(req, {
+			queryParams: [
+				'ticker'
+			]
+		}).then(function() {
+			return StockService.getPurchases(req.query.ticker.toUpperCase())
 			.then(function(response) {
 				return res.json(response);
 			});
