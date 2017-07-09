@@ -16,7 +16,22 @@ module.exports = {
 				'ticker'
 			]
 		}).then(function() {
-			return StockService.addStock(req.body.name, req.body.ticker)
+			return StockService.addStock(req.body.name, req.body.ticker.toUpperCase())
+			.then(function(response) {
+				return res.json(response);
+			});
+		}).catch(function(err) {
+			return HelperService.handleError(err, res);
+		});
+	},
+
+	removeStock: function(req, res) {
+		CheckParams(req, {
+			bodyParams: [
+				'ticker'
+			]
+		}).then(function() {
+			return StockService.removeStock(req.body.ticker.toUpperCase())
 			.then(function(response) {
 				return res.json(response);
 			});

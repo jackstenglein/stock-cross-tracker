@@ -36,5 +36,9 @@ module.exports = {
     shares: {
       type: 'integer'
     }
+  },
+
+  afterDestroy: function(destroyedRecords, cb) {
+    Transaction.destroy({stock: _.pluck(destroyedRecords, 'id')}).exec(cb);
   }
 };
