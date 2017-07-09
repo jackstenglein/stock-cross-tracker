@@ -16,6 +16,23 @@ module.exports = {
   },
 
 
+  getAllTransactions: function(ticker) {
+    return Stock.findOne({ticker: ticker})
+    .populate('purchases')
+    .populate('sales')
+    .then(function(stock, err) {
+      if(err) throw err;
+      if(!stock) throw new Err('Ticker not found', 400);
+
+      return {
+        'message': 'Found transactions',
+        'purchases': stock.purchases,
+        'sales': stock.sales
+      };
+    });
+  },
+
+
   removeStock: function(ticker) {
     return Stock.destroy({
       ticker: ticker

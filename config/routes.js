@@ -47,6 +47,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   'POST /stock/new': 'StockController.addStock',
-  'DELETE /stock/remove': 'StockController.removeStock'
+  'DELETE /stock/remove': 'StockController.removeStock',
+  'GET /stock/transactions': 'StockController.getAllTransactions'
 
 };
