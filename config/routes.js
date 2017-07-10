@@ -46,6 +46,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  /***** TEST ROUTES *****/
+  'GET /test/email': 'TestController.sendTestEmail',
+
+  /***** STOCK ROUTES *****/
   'POST /stock/new': 'StockController.addStock',
   'DELETE /stock/remove': 'StockController.removeStock',
   'GET /stock/transactions': 'StockController.getAllTransactions',
