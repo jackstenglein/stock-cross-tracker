@@ -78,6 +78,22 @@ module.exports = {
 	},
 
 
+	getStockPerformance: function(req, res) {
+		CheckParams(req, {
+			queryParams: [
+				'ticker'
+			]
+		}).then(function() {
+			return StockService.getStockPerformance(req.query.ticker.toUpperCase())
+			.then(function(response) {
+				return res.json(response);
+			});
+		}).catch(function(err) {
+			return HelperService.handleError(err, res);
+		});
+	},
+
+
 	removeStock: function(req, res) {
 		CheckParams(req, {
 			bodyParams: [
