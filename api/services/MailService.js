@@ -36,7 +36,7 @@ module.exports = {
             err.code = '500';
             return reject(err);
           }
-          return resolve({'info': info});
+          return resolve({'message': 'Email sent successfully'});
         });
       });
     });

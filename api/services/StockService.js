@@ -101,9 +101,9 @@ module.exports = {
         totalMoneyOut += stock.price * stock.shares;
       }
       let moneyEarned = totalMoneyOut - totalInvestment;
-      let percentChange = 0;
+      let percentReturn = 0;
       if(totalInvestment !== 0) {
-        percentChange = (moneyEarned * 100.0) / totalInvestment;
+        percentReturn = (moneyEarned * 100.0) / totalInvestment;
       }
 
       return {
@@ -111,7 +111,7 @@ module.exports = {
         'performance': {
           'moneyEarned': moneyEarned,
           'totalInvestment': totalInvestment,
-          'percentChange': percentChange,
+          'percentReturn': percentReturn,
           'sharesOwned': stock.shares,
           'numberOfPurchases': stock.purchases.length,
           'numberOfSales': stock.sales.length

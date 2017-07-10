@@ -48,6 +48,10 @@ module.exports.routes = {
 
   /***** TEST ROUTES *****/
   'GET /test/email': 'TestController.sendTestEmail',
+  'GET /test/daily-purchase': 'TestController.sendTestDailyPurchase',
+  'GET /test/weekly-purchase': 'TestController.sendTestWeeklyPurchase',
+  'GET /test/daily-sale': 'TestController.sendTestDailySale',
+  'GET /test/weekly-sale': 'TestController.sendTestWeeklySale',
 
   /***** STOCK ROUTES *****/
   'POST /stock/new': 'StockController.addStock',

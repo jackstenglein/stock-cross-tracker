@@ -110,7 +110,7 @@ Response:
 * `performance` (object) - Dictionary containing the following attributes:
     * `moneyEarned` (float) - The money earned by the stock (can be negative)
     * `totalInvestment` (float) - The money invested into the stock
-    * `percentChange` (float) - The percent change of the stock
+    * `percentReturn` (float) - The return on the stock
     * `sharesOwned` (integer) - The number of shares currently owned
     * `numberOfPurchases` (integer) - The number of purchases of the stock
     * `numberOfSales` (integer) - The number of sales of the stock
