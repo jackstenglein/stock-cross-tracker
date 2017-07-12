@@ -21,7 +21,10 @@ module.exports = {
     .then(function(closes) {
       return EMAService.calculateEMA10(closes)
       .then(function(ema10) {
-        return res.json({'ema10': ema10});
+        return EMAService.calculateEMA20(closes)
+        .then(function(ema20) {
+          return res.json({'ema10': ema10, 'ema20': ema20});
+        });
       });
     });
   },
