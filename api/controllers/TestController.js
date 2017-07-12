@@ -17,8 +17,12 @@ module.exports = {
 
 
   getFullDailyEMA: function(req, res) {
-    return DownloadService.downloadYearCloses('AAPL').then(function(response) {
-      return res.json(response);
+    return DownloadService.downloadYearCloses('AAPL')
+    .then(function(closes) {
+      return EMAService.calculateEMA10(closes)
+      .then(function(ema10) {
+        return res.json({'ema10': ema10});
+      });
     });
   },
 
