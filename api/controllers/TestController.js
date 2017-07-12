@@ -15,6 +15,13 @@ module.exports = {
     });
   },
 
+
+  getFullDailyEMA: function(req, res) {
+    return DownloadService.downloadYearCloses('AAPL').then(function(response) {
+      return res.json(response);
+    });
+  },
+
   sendTestDailyPurchase: function(req, res) {
     return MailService.send(
       'jackstenglein@utexas.edu',

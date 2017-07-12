@@ -52,6 +52,7 @@ module.exports.routes = {
   'GET /test/weekly-purchase': 'TestController.sendTestWeeklyPurchase',
   'GET /test/daily-sale': 'TestController.sendTestDailySale',
   'GET /test/weekly-sale': 'TestController.sendTestWeeklySale',
+  'GET /test/ema-daily': 'TestController.getFullDailyEMA',
 
   /***** STOCK ROUTES *****/
   'POST /stock/new': 'StockController.addStock',
