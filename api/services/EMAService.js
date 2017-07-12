@@ -42,7 +42,7 @@ module.exports = {
       if(isNaN(ema10)) {
         reject('EMA10 was not a number');
       } else {
-        resolve(ema10);
+        resolve(Number(Math.round(ema10 + 'e2') + 'e-2'));
       }
     });
   }
