@@ -35,11 +35,14 @@ function purchaseStock(stockID, price, ema, ticker) {
     shares: 200
   }).then(function(newTransaction, err) {
     if(err) throw err;
-    return StockService.getStockPerformanceByID(stockID)
-    .then(function(response) {
-      return MailService.purchaseStock(price, response.performance, ema, ticker)
-      .then(function(mail) {
-        return 'Golden cross';
+    return Stock.update(stockID, {shares: 200})
+    .then(function(updatedStocks, err) {
+      return StockService.getStockPerformanceByID(stockID)
+      .then(function(response) {
+        return MailService.purchaseStock(price, response.performance, ema, ticker)
+        .then(function(mail) {
+          return 'Golden cross';
+        });
       });
     });
   });
@@ -56,11 +59,14 @@ function sellStock(stockID, price, ema, ticker) {
     shares: 200
   }).then(function(newTransaction, err) {
     if(err) throw err;
-    return StockService.getStockPerformanceByID(stockID)
-    .then(function(response) {
-      return MailService.sellStock(price, response.performance, ema, ticker)
-      .then(function(mail) {
-        return 'Dead cross';
+    return Stock.update(stockID, {shares: 0})
+    .then(function(updatedStocks, err) {
+      return StockService.getStockPerformanceByID(stockID)
+      .then(function(response) {
+        return MailService.sellStock(price, response.performance, ema, ticker)
+        .then(function(mail) {
+          return 'Dead cross';
+        });
       });
     });
   });
@@ -70,16 +76,28 @@ function sellStock(stockID, price, ema, ticker) {
 module.exports = {
 
   addStock(name, ticker) {
-    return Stock.create({
-      name: name,
-      ticker: ticker
-    }).then(function(newStock, err) {
-      if(err) throw err;
-      return {
-        'message': 'Stock added',
-        'stock': newStock
-      };
+    return DownloadService.downloadYearCloses(ticker)
+    .then(function(closes) {
+      return EMAService.calculateBothEMAs(closes)
+      .then(function(ema) {
+        return Stock.create({
+          name: name,
+          ticker: ticker,
+          price: closes[0],
+          dailyEMA10:
+        }).then(function(newStock, err) {
+          if(err) throw err;
+          return {
+            'message': 'Stock added',
+            'stock': newStock
+          };
+        });
+      })
+          return res.json({'ema10': ema10, 'ema20': ema20});
+        });
+      });
     });
+
   },
 
 
