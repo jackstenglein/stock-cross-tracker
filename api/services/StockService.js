@@ -85,7 +85,7 @@ module.exports = {
           ticker: ticker,
           price: closes[0],
           dailyEMA10: ema.ema10,
-          dailyEMA20 ema.ema20
+          dailyEMA20: ema.ema20
         }).then(function(newStock, err) {
           if(err) throw err;
           return {
@@ -93,12 +93,8 @@ module.exports = {
             'stock': newStock
           };
         });
-      })
-          return res.json({'ema10': ema10, 'ema20': ema20});
-        });
       });
     });
-
   },
 
 
