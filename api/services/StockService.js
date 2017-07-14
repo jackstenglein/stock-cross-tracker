@@ -84,7 +84,8 @@ module.exports = {
           name: name,
           ticker: ticker,
           price: closes[0],
-          dailyEMA10:
+          dailyEMA10: ema.ema10,
+          dailyEMA20 ema.ema20
         }).then(function(newStock, err) {
           if(err) throw err;
           return {
@@ -232,7 +233,10 @@ module.exports = {
 
 
   updateAllStocks: function() {
-    return Stock.find().populate('purchases').then(function(stocks, err) {
+    return Stock.find()
+    .populate('purchases')
+    .populate('sales')
+    .then(function(stocks, err) {
       if(err) throw err;
       var promise = _.map(stocks, function(stock) {
         //console.log('Finding the closes for: %j', stock);
@@ -252,9 +256,9 @@ module.exports = {
               console.log('Stock sales: %j', stock.sales);
 
               // check for a golden cross, then dead cross
-              if(ema.ema10 > ema.ema20 && stock.dailyEMA10 < stock.dailyEMA20) {
+              if(ema.ema10 > ema.ema20 && stock.dailyEMA10 <= stock.dailyEMA20 && stock.purchases.length === stock.sales.length) {
                 return purchaseStock(stock.id, closes[0], ema, stock.ticker);
-              } else if(ema.ema10 < ema.ema20 && stock.dailyEMA10 > stock.dailyEMA20 && stock.purchases.length > 0) {
+              } else if(ema.ema10 < ema.ema20 && stock.dailyEMA10 >= stock.dailyEMA20 && stock.purchases.length > stock.sales.length) {
                 return sellStock(stock.id, closes[0], ema, stock.ticker);
               } else {
                 return 'No cross';
