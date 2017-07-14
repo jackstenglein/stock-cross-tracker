@@ -10,13 +10,19 @@
  */
 
 const Scheduler = require('node-schedule');
+var _ = require('lodash');
+const Promise = require('bluebird');
 
 
 module.exports.bootstrap = function(cb) {
 
 
-  var test = Scheduler.scheduleJob('* * * * *', function() {
-    console.log('Test Scheduling Jobs');
+  var updateStocks = Scheduler.scheduleJob('* * * * *', function() {
+
+    console.log('Updating the stocks');
+    StockService.updateAllStocks().then(function(updatedStocks) {
+      console.log('updated stocks: %j', updatedStocks);
+    })
   });
 
 

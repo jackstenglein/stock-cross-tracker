@@ -46,5 +46,20 @@ module.exports = {
         resolve(Number(Math.round(ema20 + 'e2') + 'e-2'));
       }
     });
+  },
+
+  calculateBothEMAs: function(closes) {
+    return new Promise(function(resolve, reject) {
+      let ema10 = calculateEMA(closes, 10, EMA10_MULTIPLIER);
+      let ema20 = calculateEMA(closes, 20, EMA20_MULTIPLIER);
+      if(isNaN(ema10) || isNaN(ema20)) {
+        reject('EMA was not a number');
+      } else {
+        resolve({
+          'ema10': Number(Math.round(ema10 + 'e2') + 'e-2'),
+          'ema20': Number(Math.round(ema20 + 'e2') + 'e-2')
+        });
+      }
+    });
   }
 }

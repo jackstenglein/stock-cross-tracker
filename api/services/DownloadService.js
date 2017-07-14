@@ -9,8 +9,8 @@ module.exports = {
     return new Promise(function(resolve, reject) {
       Request('http://www.google.com/finance/historical?q=NASDAQ:' + ticker + '&output=csv', function(err, response, body) {
         if(err) reject(err);
-        console.log('Response: %j', response);
-        console.log('\n\nBody: %j', body);
+        //console.log('Response: %j', response);
+        //console.log('\n\nBody: %j', body);
         var closes = [];
         var lines = body.split('\n');
         const length = lines.length - 1;
@@ -22,6 +22,8 @@ module.exports = {
       });
     });
   }
+
+
 
 
 }

@@ -35,6 +35,14 @@ module.exports = {
 
     shares: {
       type: 'integer'
+    },
+
+    dailyEMA10: {
+      type: 'float'
+    },
+
+    dailyEMA20: {
+      type: 'float'
     }
   },
 

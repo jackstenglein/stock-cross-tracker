@@ -1,4 +1,6 @@
 const Err = require('err');
+var Promise = require('bluebird');
+var _ = require('lodash');
 
 
 
@@ -131,6 +133,31 @@ module.exports = {
         'message': 'Stock removed',
         'stock': destroyedRecords[0]
       };
+    });
+  },
+
+
+  updateAllStocks: function() {
+    console.log('Update all stocks');
+    return Stock.find().then(function(stocks, err) {
+      if(err) throw err;
+      console.log('Found the stocks: %j', stocks);
+      var promise = _.map(stocks, function(stock) {
+        //console.log('Finding the closes for: %j', stock);
+        return DownloadService.downloadYearCloses(stock.ticker)
+        .then(function(closes) {
+          return EMAService.calculateBothEMAs(closes)
+          .then(function(ema) {
+            return Stock.update(stock.id, {dailyEMA10: ema.ema10, dailyEMA20: ema.ema20})
+            .then(function(updatedStocks, err) {
+              if(err) throw err;
+              return updatedStocks[0];
+            });
+          });
+        });
+      });
+
+      return Promise.all(promise);
     });
   }
 
