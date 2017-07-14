@@ -21,12 +21,12 @@ module.exports = {
 
     purchases: {
       collection: 'transaction',
-      via: 'stock'
+      via: 'purchase'
     },
 
     sales: {
       collection: 'transaction',
-      via: 'stock'
+      via: 'sale'
     },
 
     price: {

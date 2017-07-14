@@ -139,5 +139,16 @@ module.exports = {
     }).catch(function(err) {
       return HelperService.handleError(err, res);
     });
+  },
+
+  setEMA: function(req, res) {
+    return Stock.update({ticker: req.body.ticker}, {dailyEMA10: req.body.ema10, dailyEMA20: req.body.ema20})
+    .then(function(updatedStocks, err) {
+      if(err) throw err;
+      return res.json({
+        'message': 'Stock updated',
+        'stock': updatedStocks[0]
+      });
+    });
   }
 }

@@ -1,6 +1,7 @@
 const Err = require('err');
 var Promise = require('bluebird');
 var _ = require('lodash');
+const Moment = require('moment');
 
 
 
@@ -23,6 +24,47 @@ function calculateTotalSales(sales) {
   return sum;
 }
 
+
+function purchaseStock(stockID, price, ema, ticker) {
+  console.log('Purchase stock: ' + ticker);
+  return Transaction.create({
+    purchase: stockID,
+    type: 0,
+    price: price,
+    date: Moment().toDate(),
+    shares: 200
+  }).then(function(newTransaction, err) {
+    if(err) throw err;
+    return StockService.getStockPerformanceByID(stockID)
+    .then(function(response) {
+      return MailService.purchaseStock(price, response.performance, ema, ticker)
+      .then(function(mail) {
+        return 'Golden cross';
+      });
+    });
+  });
+}
+
+
+function sellStock(stockID, price, ema, ticker) {
+  console.log('Sell stock: ' + ticker);
+  return Transaction.create({
+    sale: stockID,
+    type: 1,
+    price: price,
+    date: Moment().toDate(),
+    shares: 200
+  }).then(function(newTransaction, err) {
+    if(err) throw err;
+    return StockService.getStockPerformanceByID(stockID)
+    .then(function(response) {
+      return MailService.sellStock(price, response.performance, ema, ticker)
+      .then(function(mail) {
+        return 'Dead cross';
+      });
+    });
+  });
+}
 
 
 module.exports = {
@@ -122,6 +164,40 @@ module.exports = {
     });
   },
 
+  getStockPerformanceByID: function(stockID) {
+    return Stock.findOne(stockID)
+    .populate('purchases')
+    .populate('sales')
+    .then(function(stock, err) {
+      if(err) throw err;
+      if(!stock) throw new Err('Ticker not found', 400);
+
+      // do the calculations to get the necesary values
+      let totalInvestment = calculateTotalInvestment(stock.purchases);
+      let totalMoneyOut = calculateTotalSales(stock.sales);
+      if(stock.price && stock.shares) {
+        totalMoneyOut += stock.price * stock.shares;
+      }
+      let moneyEarned = totalMoneyOut - totalInvestment;
+      let percentReturn = 0;
+      if(totalInvestment !== 0) {
+        percentReturn = (moneyEarned * 100.0) / totalInvestment;
+      }
+
+      return {
+        'message': 'Found performance',
+        'performance': {
+          'moneyEarned': moneyEarned,
+          'totalInvestment': totalInvestment,
+          'percentReturn': percentReturn,
+          'sharesOwned': stock.shares,
+          'numberOfPurchases': stock.purchases.length,
+          'numberOfSales': stock.sales.length
+        }
+      };
+    });
+  },
+
 
   removeStock: function(ticker) {
     return Stock.destroy({
@@ -148,10 +224,24 @@ module.exports = {
         .then(function(closes) {
           return EMAService.calculateBothEMAs(closes)
           .then(function(ema) {
-            return Stock.update(stock.id, {dailyEMA10: ema.ema10, dailyEMA20: ema.ema20})
-            .then(function(updatedStocks, err) {
+            return Stock.update(stock.id, {
+              dailyEMA10: ema.ema10,
+              dailyEMA20: ema.ema20,
+              price: closes[0]
+            }).then(function(updatedStocks, err) {
               if(err) throw err;
-              return updatedStocks[0];
+              console.log('Original EMA: ' + stock.dailyEMA10);
+              ema.prevEMA10 = stock.dailyEMA10;
+              ema.prevEMA20 = stock.dailyEMA20;
+
+              // check for a golden cross
+              if(ema.ema10 > ema.ema20 && stock.dailyEMA10 < stock.dailyEMA20) {
+                return purchaseStock(stock.id, closes[0], ema, stock.ticker);
+              } else if(ema.ema10 < ema.ema20 && stock.dailyEMA10 > stock.dailyEMA20) {
+                return sellStock(stock.id, closes[0], ema, stock.ticker);
+              } else {
+                return 'No cross';
+              }
             });
           });
         });

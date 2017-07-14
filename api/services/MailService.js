@@ -50,5 +50,53 @@ module.exports = {
       console.log('Error in sending error email: %j', error);
       return error;
     });
+  },
+
+  purchaseStock: function(price, performance, ema, ticker) {
+    return MailService.send(
+      'jackstenglein@utexas.edu',
+      'Buy Signal — ' + ticker,
+      'purchaseNotification',
+      {
+        'basis': {
+          'name': 'daily',
+          'prevPeriod': 'Yesterday',
+          'currPeriod': 'Today'
+        },
+        'ticker': ticker,
+        'prevEMA10': ema.prevEMA10,
+        'prevEMA20': ema.prevEMA20,
+        'currEMA10': ema.ema10,
+        'currEMA20': ema.ema20,
+        'shares': 200,
+        'price': price,
+        'totalInvestment': performance.totalInvestment,
+        'percentReturn': performance.percentReturn
+      }
+    );
+  },
+
+  sellStock: function(price, performance, ema, ticker) {
+    return MailService.send(
+      'jackstenglein@utexas.edu',
+      'Sell Signal — ' + ticker,
+      'saleNotification',
+      {
+        'basis': {
+          'name': 'daily',
+          'prevPeriod': 'Yesterday',
+          'currPeriod': 'Today'
+        },
+        'ticker': ticker,
+        'prevEMA10': ema.prevEMA10,
+        'prevEMA20': ema.prevEMA20,
+        'currEMA10': ema.ema10,
+        'currEMA20': ema.ema20,
+        'shares': 200,
+        'price': price,
+        'totalInvestment': performance.totalInvestment,
+        'percentReturn': performance.percentReturn
+      }
+    );
   }
 }

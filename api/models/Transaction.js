@@ -8,9 +8,12 @@
 module.exports = {
 
   attributes: {
-    stock: {
-      model: 'stock',
-      required: true
+    purchase: {
+      model: 'stock'
+    },
+
+    sale: {
+      model: 'stock'
     },
 
     type: {
