@@ -17,7 +17,7 @@ const Promise = require('bluebird');
 module.exports.bootstrap = function(cb) {
 
 
-  var updateStocks = Scheduler.scheduleJob('* * * * *', function() {
+  var updateStocks = Scheduler.scheduleJob('30 17 * * 1-5', function() {
 
     console.log('Updating the stocks');
     StockService.updateAllStocks().then(function(updatedStocks) {
